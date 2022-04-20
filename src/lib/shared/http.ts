@@ -1,3 +1,4 @@
+const baseUrl = 'http://localhost:3000'
 
 async function send({ method, path, data, token }:any) {
     const opts:any = { method, headers: {} };
@@ -11,7 +12,7 @@ async function send({ method, path, data, token }:any) {
         opts.headers['Authorization'] = `Token ${token}`;
     }
 
-    return fetch(`${path}`, opts)
+    return fetch(`${baseUrl}${path}`, opts)
         .then((r) => r.text())
         .then((json) => {
             try {
@@ -31,7 +32,6 @@ export function del(path:string, token:string) {
 }
 
 export function post(path:string, data:any, token:string) {
-    console.log(token)
     return send({ method: 'POST', path, data, token });
 }
 

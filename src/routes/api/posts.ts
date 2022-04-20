@@ -1,19 +1,18 @@
-import * as cheerio from 'cheerio'
-import * as api from '../../lib/shared/api'
+import {read, save} from "../../lib/shared/db";
+
 export async function post({request}:any){
-    const json = await request.json()
-    const url = json.url
-    const res = await api.get(url,'')
-    const $ = cheerio.load(res)
-    const desc =
-        $('meta[property="og:description"]').attr("content") ||
-        $('meta[name="description"]').attr("content");
-    const image =
-        $('meta[property="og:image"]').attr("content") ||
-        $('meta[property="og:image:url"]').attr("content")||
-        $('meta[property="og:image:url"]').attr("content");
-    const item ={desc, image, url }
+    const posts = await request.json()
+    await save( JSON.stringify(posts))
     return {
-        body: item
+        body: posts
+    }
+}
+
+export async function get({url}:any){
+    const posts = await read()
+    console.log('in function get')
+    console.log(posts)
+    return {
+        body:posts
     }
 }
