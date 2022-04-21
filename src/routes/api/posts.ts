@@ -1,4 +1,4 @@
-import {read, save} from "../../lib/shared/db";
+import {read, save} from "../../lib/backend/db";
 
 export async function post({request}:any){
     const posts = await request.json()
@@ -10,8 +10,6 @@ export async function post({request}:any){
 
 export async function get({url}:any){
     const posts = await read()
-    console.log('in function get')
-    console.log(posts)
     return {
         body:posts
     }

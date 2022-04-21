@@ -6,8 +6,11 @@ export async function save(data:string){
 }
 
 export async function read(){
-    console.log('in function read')
-    const str = await fs.readFile(File);
-    const data = JSON.parse(str.toString());
-    return data
+    try {
+        const str = await fs.readFile(File);
+        const data = JSON.parse(str.toString());
+        return data
+    }catch {
+        return []
+    }
 }

@@ -12,7 +12,10 @@ async function send({ method, path, data, token }:any) {
         opts.headers['Authorization'] = `Token ${token}`;
     }
 
-    return fetch(`${baseUrl}${path}`, opts)
+    if (!path.startsWith('http')){
+        path = `${baseUrl}${path}`
+    }
+    return fetch(path, opts)
         .then((r) => r.text())
         .then((json) => {
             try {

@@ -15,8 +15,8 @@
 <script lang="ts">
     import Button from '@smui/button';
     import {post} from '../lib/shared/http'
-    import Editor from "../lib/components/editor/Editor.svelte";
-    import NewsLetter from "../lib/components/letter/NewsLetter.svelte";
+    import Editor from "../components/editor/Editor.svelte";
+    import NewsLetter from "../components/letter/NewsLetter.svelte";
 
     export let posts
 </script>

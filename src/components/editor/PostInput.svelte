@@ -1,6 +1,6 @@
 <script lang="ts">
     import {createEventDispatcher} from 'svelte';
-    import type {Post} from "../../shared/types/post.type";
+    import type {Post} from "../../lib/shared/types/post.type";
     const dispatch = createEventDispatcher();
     export let post : Post
     export let index

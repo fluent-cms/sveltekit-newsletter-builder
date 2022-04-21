@@ -1,8 +1,6 @@
 <script lang="ts" context="module">
-    import type {Post} from '$lib/shared/types/post.type'
     import {get} from "../lib/shared/http";
-
-    export async function load({params, fetch}){
+export async function load({params, fetch}){
         const posts = await get('/api/posts','')
         return {
             props:{
@@ -14,47 +12,41 @@
 
 <script lang="ts">
     import Button from '@smui/button';
-    import {post} from '../lib/shared/http'
-    import Editor from "../lib/components/editor/Editor.svelte";
-    import NewsLetter from "../lib/components/letter/NewsLetter.svelte";
+    import Editor from "../components/editor/Editor.svelte";
+    import NewsLetter from "../components/letter/NewsLetter.svelte";
+    import {crawPost, saveAllPost} from "../lib/frontend/services";
+    import {updateItem} from "../lib/shared/utils/array";
 
     export let posts
-    let message =''
 
     const addPost = async () => {
-        posts = [...posts, {url:''}]
-        await saveAllPost()
+        posts = [...posts, {url:'',id: Date.now()}]
+        await saveAllPost(posts)
     }
 
     const saveOnePost = async ({detail:{url,index}}) =>{
-        await crawPost(index, url)
-        await saveAllPost()
-
+        const item = await crawPost(index, url)
+        posts = updateItem(posts, index, item)
+        await saveAllPost(posts)
     }
 
-    const saveAllPost = async ()=>{
-        console.log('in save all posts')
-        message = ''
-        const result = await post('/api/posts', posts,'')
-        if (result){
-            message = 'saved'
-        }
-    }
-    const crawPost = async (index, url) => {
-        const result = await post('/api/crawler', {url}, '')
-        if (result) {
-            const temp: Post[] = [...posts]
-            temp [index] = result as Post
-            posts = temp
-        }
+    const savePostOrder = async ({detail}) =>{
+        console.log('save post order')
+        console.log(detail)
+        posts = detail
+        await saveAllPost(posts)
     }
 </script>
-<div>
-    <label>{message}</label>
-</div>
+
 <Button on:mousedown={addPost}>Posts</Button>
 <Button>Html</Button>
 <Button on:mousedown={saveAllPost}>Save</Button>
 <a href="preview">Preview</a>
 <Editor {posts} on:saveOnePost ={saveOnePost}/>
-<NewsLetter {posts}/>
+<NewsLetter {posts} on:savePostOrder = {savePostOrder}/>
+<style>
+    :global(*) {
+        box-sizing: border-box;
+        margin: 0;
+    }
+</style>
